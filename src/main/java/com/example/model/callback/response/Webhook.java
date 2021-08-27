@@ -1,6 +1,6 @@
-package com.example.model;
+package com.example.model.callback.response;
 
-public class WebhookResponseModel extends ResponseModel {
+public class Webhook extends Basic {
     
     protected String[] event_types;
 
@@ -12,7 +12,7 @@ public class WebhookResponseModel extends ResponseModel {
         return event_types;
     }
 
-    public WebhookResponseModel() {
+    public Webhook() {
         this.status_message = "ok";
         this.status = 0;
         String[] event_types = {"message", "delivered", "seen", "failed", "subscribed", "unsubscribed", "conversation_started"};

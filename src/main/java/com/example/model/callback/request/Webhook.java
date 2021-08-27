@@ -1,6 +1,6 @@
-package com.example.model;
+package com.example.model.callback.request;
 
-public class WebhookRequestModel {
+public class Webhook {
     private String event;
     private Integer timestamp;
     private String status_message;
@@ -38,7 +38,7 @@ public class WebhookRequestModel {
         this.status = status;
     }
 
-    public WebhookRequestModel(String event, Integer timestamp, String status_message, Integer status) {
+    public Webhook(String event, Integer timestamp, String status_message, Integer status) {
         this.event = event;
         this.timestamp = timestamp;
         this.status_message = status_message;

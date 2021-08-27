@@ -1,6 +1,6 @@
-package com.example.model;
+package com.example.model.callback.response;
 
-public abstract class ResponseModel {
+public abstract class Basic {
     
     protected String status_message;
     protected Integer status;

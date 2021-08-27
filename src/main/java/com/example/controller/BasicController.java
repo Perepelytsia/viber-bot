@@ -1,8 +1,9 @@
 package com.example.controller;
 
-import com.example.model.DefaultResponseModel;
-import com.example.model.ErrorResponseModel;
-import com.example.model.WebhookResponseModel;
+import com.example.service.HttpClient;
+import com.example.model.callback.response.Default;
+import com.example.model.callback.response.Error;
+import com.example.model.callback.response.Webhook;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.example.model.call.request.Text;
+import com.example.model.callback.request.Message;
+import java.net.URLDecoder;
 
 @RestController
 public class BasicController {
@@ -21,17 +24,18 @@ public class BasicController {
     
     @Autowired
     private ObjectMapper objectMapper;
- 
+    
     @PostMapping("/")
     public String applyEvent(@RequestBody String payload) throws JsonProcessingException, Exception {
         
-        System.out.println(payload);
+        String decoded = URLDecoder.decode(payload, "UTF-8");
+        System.out.println(decoded);
         try {
-            JsonNode jsonNode = this.objectMapper.readTree(payload);
+            JsonNode jsonNode = this.objectMapper.readTree(decoded);
             switch(jsonNode.get("event").asText()) {
                 case "webhook":
-                    System.out.println("here");
-                    return this.gson.toJson(new WebhookResponseModel());
+                    System.out.println("request webhook");
+                    return this.gson.toJson(new Webhook());
                 case "seen":
                     // code
                     break;
@@ -48,14 +52,34 @@ public class BasicController {
                     // code
                     break;
                 case "message":
-                    // code
+                    System.out.println("Start message");
+                    Message message = this.gson.fromJson(decoded, Message.class);
+                    
+                    final String receiver = message.getSender().getId();
+                    final Integer min_api_version = message.getSender().getApi_version();
+                    final String name = message.getSender().getName();
+                    final String avatar = message.getSender().getAvatar();
+                                
+                    Thread newThread = new Thread(() -> {
+                        System.out.println("Start Thread");
+                        HttpClient client = new HttpClient();
+
+                        Text model = new Text(receiver, min_api_version, name, avatar, "test", "text", "Hello world!!!");
+
+                        client.sendPost(this.gson.toJson(model));
+                        System.out.println("End Thread");
+                    });
+                    newThread.start();
+
+                    System.out.println("End message");;
                     break;
             }
-            return this.gson.toJson(new DefaultResponseModel());
+            return this.gson.toJson(new Default());
            
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return this.gson.toJson(new ErrorResponseModel());
+            return this.gson.toJson(new Error());
         }
+        
     }
 }

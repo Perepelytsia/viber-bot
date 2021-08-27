@@ -57,9 +57,9 @@ public class BasicController {
                     
                     final String receiver = message.getSender().getId();
                     final Integer min_api_version = message.getSender().getApi_version();
-                    final String name = message.getSender().getName();
-                    final String avatar = message.getSender().getAvatar();
-                                
+                    final String name = "Alex Perepelytsia";
+                    final String avatar = "https://media-direct.cdn.viber.com/download_photo?dlid=k9lPCdXcJ_2WK9hNEkPifKVFaC2MnIohSqvlsmcutq_UKO2xyYoj5qsm1SSZIC4WBCj2iEJXjuMd9oU4t1GyFhvPwXEkDrsHOE6AAFQEFlKNFa_crUHqP1pllxyey9RqCPShnA&fltp=jpg&imsz=0000";
+                               
                     Thread newThread = new Thread(() -> {
                         System.out.println("Start Thread");
                         HttpClient client = new HttpClient();

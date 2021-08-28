@@ -17,7 +17,7 @@ import com.example.model.callback.request.Message;
 import java.net.URLDecoder;
 
 @RestController
-public class BasicController {
+public class ApiController {
 
     @Autowired
     private Gson gson;

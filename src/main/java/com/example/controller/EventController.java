@@ -1,6 +1,7 @@
 package com.example.controller;
 
-import com.example.service.HttpClient;
+import com.example.model.call.request.File;
+import com.example.model.call.request.Text;
 import com.example.model.callback.response.Default;
 import com.example.model.callback.response.Error;
 import com.example.model.callback.response.Webhook;
@@ -8,16 +9,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.model.call.request.Text;
-import com.example.model.callback.request.Message;
+import com.example.model.callback.request.Event;
+import com.example.service.HttpClient;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 public class EventController {
+    
+    @Value("${domain}")
+    private String domain;
 
     @Autowired
     private Gson gson;
@@ -53,25 +63,47 @@ public class EventController {
                     break;
                 case "message":
                     System.out.println("Start message");
-                    Message message = this.gson.fromJson(decoded, Message.class);
                     
-                    final String receiver = message.getSender().getId();
-                    final Integer min_api_version = message.getSender().getApi_version();
-                    final String name = "Alex Perepelytsia";
-                    final String avatar = "https://media-direct.cdn.viber.com/download_photo?dlid=k9lPCdXcJ_2WK9hNEkPifKVFaC2MnIohSqvlsmcutq_UKO2xyYoj5qsm1SSZIC4WBCj2iEJXjuMd9oU4t1GyFhvPwXEkDrsHOE6AAFQEFlKNFa_crUHqP1pllxyey9RqCPShnA&fltp=jpg&imsz=0000";
-                               
+                    // data parse
+                    Event message = this.gson.fromJson(decoded, Event.class);
+                    String receiver = message.getSender().getId();
+              
+                    String regex = "test[0-9]+.py";
+                    Pattern pattern = Pattern.compile(regex);
+                    String data = message.getMessage().getText();
+                    Matcher matcher = pattern.matcher(data);
+                    String msg = "default";
+                    
+                    if (matcher.find()) {
+                        String task = data.substring(matcher.start(), matcher.end());
+                        String currentPath = new java.io.File(".").getCanonicalPath();
+                        Path path = Paths.get(currentPath + "/src/main/resources/static/" + task);
+                        
+                        // find file
+                        if(Files.exists(path)) { 
+                            File fileEvent = new File(receiver, "file", this.domain + task, task, Files.size(path));
+                            msg = this.gson.toJson(fileEvent);
+                        } else {
+                            Text textEvent = new Text(receiver, "text", "Задание еще не полностью готово");
+                            msg = this.gson.toJson(textEvent);
+                        }
+                    } else {
+                        Text textEvent = new Text(receiver, "text", "API ответ");
+                        msg = this.gson.toJson(textEvent);
+                    }
+                    
+                    final String remessage = msg;
+                    
+                    // message thread
                     Thread newThread = new Thread(() -> {
                         System.out.println("Start Thread");
                         HttpClient client = new HttpClient();
-
-                        Text model = new Text(receiver, min_api_version, name, avatar, "test", "text", "Hello world!!!");
-
-                        client.sendPost(this.gson.toJson(model));
+                        client.sendPost(remessage);
                         System.out.println("End Thread");
                     });
                     newThread.start();
-
-                    System.out.println("End message");;
+    
+                    System.out.println("End message");
                     break;
             }
             return this.gson.toJson(new Default());

@@ -1,13 +1,13 @@
 package com.example.model.callback.request;
 
-public class Message {
+public class Event {
     private String event;
     private Long timestamp;
     private String chat_hostname;
     private Long message_token;
     private boolean silent;
     private Sender sender;
-    private Text text;
+    private Message message;
 
     public String getEvent() {
         return event;
@@ -57,27 +57,27 @@ public class Message {
         this.sender = sender;
     }
 
-    public Text getText() {
-        return text;
+    public Message getMessage() {
+        return this.message;
     }
 
     @Override
     public String toString() {
-        return "Message{" + "event=" + event + ", timestamp=" + timestamp + ", chat_hostname=" + chat_hostname + ", message_token=" + message_token + ", silent=" + silent + ", sender=" + sender + ", text=" + text + '}';
+        return "Message{" + "event=" + event + ", timestamp=" + timestamp + ", chat_hostname=" + chat_hostname + ", message_token=" + message_token + ", silent=" + silent + ", sender=" + sender + ", text=" + message + '}';
     }
 
-    public void setText(Text text) {
-        this.text = text;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
-    public Message(String event, Long timestamp, String chat_hostname, Long message_token, boolean silent, Sender sender, Text text) {
+    public Event(String event, Long timestamp, String chat_hostname, Long message_token, boolean silent, Sender sender, Message message) {
         this.event = event;
         this.timestamp = timestamp;
         this.chat_hostname = chat_hostname;
         this.message_token = message_token;
         this.silent = silent;
         this.sender = sender;
-        this.text = text;
+        this.message = message;
     }
 
     public class Sender {
@@ -146,7 +146,7 @@ public class Message {
         }
     }
     
-    public class Text {
+    public class Message {
         private String text;
         private String type;
 
@@ -171,7 +171,7 @@ public class Message {
             this.type = type;
         }
 
-        public Text(String text, String type) {
+        public Message(String text, String type) {
             this.text = text;
             this.type = type;
         }

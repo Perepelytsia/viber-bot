@@ -19,7 +19,7 @@ public class HttpClient {
             String json = data;
             StringEntity entity = new StringEntity(json);
             post.setEntity(entity);
-            post.setHeader("X-Viber-Auth-Token", "4dd82b96fd27dcd5-dd03e7313d63761c-31655cd9ce9eee2b");
+            post.setHeader("X-Viber-Auth-Token", "4de736e4df27d5ba-2064c41ce6fdb782-1df314ba68cd291");
             post.setHeader("Accept", "application/json");
             post.setHeader("Content-type", "application/json");
             

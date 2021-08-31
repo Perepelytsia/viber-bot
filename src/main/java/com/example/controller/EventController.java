@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.model.callback.request.Event;
+import com.example.model.callback.request.Subscribe;
 import com.example.service.HttpClient;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -42,6 +43,10 @@ public class EventController {
         System.out.println(decoded);
         try {
             JsonNode jsonNode = this.objectMapper.readTree(decoded);
+            String receiver = "";
+            String msg = "default";
+            Text textEvent;
+            Thread newThread;
             switch(jsonNode.get("event").asText()) {
                 case "webhook":
                     System.out.println("request webhook");
@@ -56,7 +61,23 @@ public class EventController {
                     // code
                     break;
                 case "subscribed":
-                    // code
+                     System.out.println("Start subscribed");
+                     // data parse
+                     Subscribe subscribe = this.gson.fromJson(decoded, Subscribe.class);
+                     receiver = subscribe.getUser().getId();
+                     textEvent = new Text(receiver, "text", "Привет. Для получение задание нужно написать в сообщении имя задания. Например test34.py.");
+                     final String answer = this.gson.toJson(textEvent);
+                    
+                     // message thread
+                     newThread = new Thread(() -> {
+                        System.out.println("Start Thread");
+                        HttpClient client = new HttpClient();
+                        client.sendPost(answer);
+                        System.out.println("End Thread");
+                     });
+                     newThread.start();
+                     
+                     System.out.println("End subscribed");
                     break;
                 case "unsubscribed":
                     // code
@@ -66,13 +87,12 @@ public class EventController {
                     
                     // data parse
                     Event message = this.gson.fromJson(decoded, Event.class);
-                    String receiver = message.getSender().getId();
+                    receiver = message.getSender().getId();
               
                     String regex = "test[0-9]+.py";
                     Pattern pattern = Pattern.compile(regex);
                     String data = message.getMessage().getText();
                     Matcher matcher = pattern.matcher(data);
-                    String msg = "default";
                     
                     if (matcher.find()) {
                         String task = data.substring(matcher.start(), matcher.end());
@@ -84,18 +104,18 @@ public class EventController {
                             File fileEvent = new File(receiver, "file", this.domain + task, task, Files.size(path));
                             msg = this.gson.toJson(fileEvent);
                         } else {
-                            Text textEvent = new Text(receiver, "text", "Задание еще не полностью готово");
+                            textEvent = new Text(receiver, "text", "Задание еще не полностью готово");
                             msg = this.gson.toJson(textEvent);
                         }
                     } else {
-                        Text textEvent = new Text(receiver, "text", "API ответ");
+                        textEvent = new Text(receiver, "text", "API ответ");
                         msg = this.gson.toJson(textEvent);
                     }
                     
                     final String remessage = msg;
                     
                     // message thread
-                    Thread newThread = new Thread(() -> {
+                    newThread = new Thread(() -> {
                         System.out.println("Start Thread");
                         HttpClient client = new HttpClient();
                         client.sendPost(remessage);

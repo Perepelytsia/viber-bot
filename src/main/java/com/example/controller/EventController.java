@@ -46,7 +46,7 @@ public class EventController {
             String receiver = "";
             String msg = "default";
             Text textEvent;
-            Thread newThread;
+            HttpClient clientMessage = new HttpClient();
             switch(jsonNode.get("event").asText()) {
                 case "webhook":
                     System.out.println("request webhook");
@@ -66,16 +66,8 @@ public class EventController {
                      Subscribe subscribe = this.gson.fromJson(decoded, Subscribe.class);
                      receiver = subscribe.getUser().getId();
                      textEvent = new Text(receiver, "text", "Привет. Для получение задание нужно написать в сообщении имя задания. Например test34.py.");
-                     final String answer = this.gson.toJson(textEvent);
-                    
-                     // message thread
-                     newThread = new Thread(() -> {
-                        System.out.println("Start Thread");
-                        HttpClient client = new HttpClient();
-                        client.sendPost(answer);
-                        System.out.println("End Thread");
-                     });
-                     newThread.start();
+                     msg = this.gson.toJson(textEvent);
+                     clientMessage.createThread(msg);
                      
                      System.out.println("End subscribed");
                     break;
@@ -112,16 +104,8 @@ public class EventController {
                         msg = this.gson.toJson(textEvent);
                     }
                     
-                    final String remessage = msg;
                     
-                    // message thread
-                    newThread = new Thread(() -> {
-                        System.out.println("Start Thread");
-                        HttpClient client = new HttpClient();
-                        client.sendPost(remessage);
-                        System.out.println("End Thread");
-                    });
-                    newThread.start();
+                    clientMessage.createThread(msg);
     
                     System.out.println("End message");
                     break;

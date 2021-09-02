@@ -8,26 +8,29 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class HttpClient {
     
     @Value("${token}")
-    private String token;
+    protected String token;
+    
+    @Value("${target}")
+    protected String target;
     
     protected void sendPost(String answer) {
         try {
             System.out.println("Send Http POST request");
-            
             CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPost post = new HttpPost("https://chatapi.viber.com/pa/send_message");
-
-            String json = answer;
-            StringEntity entity = new StringEntity(json);
+            System.out.println(this.target);
+            HttpPost post = new HttpPost(this.target);
+            StringEntity entity = new StringEntity(answer);
             post.setEntity(entity);
             post.setHeader("X-Viber-Auth-Token", this.token);
             post.setHeader("Accept", "application/json");
             post.setHeader("Content-type", "application/json");
-            
+          
             CloseableHttpResponse response = httpClient.execute(post);
             
             System.out.println(response.getStatusLine().getStatusCode());    
@@ -42,8 +45,7 @@ public class HttpClient {
     {
         Thread newThread = new Thread(() -> {
             System.out.println("Start Thread");
-            HttpClient client = new HttpClient();
-            client.sendPost(answer);
+            this.sendPost(answer);
             System.out.println("End Thread");
         });
         newThread.start();

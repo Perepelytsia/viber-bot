@@ -28,13 +28,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EventController {
     
     @Value("${domain}")
-    private String domain;
-
-    @Autowired
-    private Gson gson;
+    protected String domain;
     
     @Autowired
-    private ObjectMapper objectMapper;
+    protected HttpClient clientMessage;
+
+    @Autowired
+    protected Gson gson;
+    
+    @Autowired
+    protected ObjectMapper objectMapper;
+    
+    protected String receiver;
+    protected String msg;
+    
+    protected Text textEvent;
     
     @PostMapping("/")
     public String applyEvent(@RequestBody String payload) throws JsonProcessingException, Exception {
@@ -43,10 +51,6 @@ public class EventController {
         System.out.println(decoded);
         try {
             JsonNode jsonNode = this.objectMapper.readTree(decoded);
-            String receiver = "";
-            String msg = "default";
-            Text textEvent;
-            HttpClient clientMessage = new HttpClient();
             switch(jsonNode.get("event").asText()) {
                 case "webhook":
                     System.out.println("request webhook");

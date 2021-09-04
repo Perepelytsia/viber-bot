@@ -25,7 +25,7 @@ public class HttpClient {
             CloseableHttpClient httpClient = HttpClients.createDefault();
             System.out.println(this.target);
             HttpPost post = new HttpPost(this.target);
-            StringEntity entity = new StringEntity(answer);
+            StringEntity entity = new StringEntity(answer, "UTF-8");
             post.setEntity(entity);
             post.setHeader("X-Viber-Auth-Token", this.token);
             post.setHeader("Accept", "application/json");

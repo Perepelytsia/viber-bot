@@ -1,7 +1,7 @@
 package com.example.model.call.request;
 
 public abstract class Basic {
-    public static final String NAME_BOT = "Lego Bot";
+    public static final String NAME_BOT = "Lego Helper";
     protected String receiver;
     protected Integer min_api_version;
     protected Sender sender;

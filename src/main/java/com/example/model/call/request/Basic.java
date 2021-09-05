@@ -54,6 +54,9 @@ public abstract class Basic {
     public void setType(String type) {
         this.type = type;
     }
+    
+    abstract public String getText();
+    abstract public void setText(String text);
 
     public class Sender {
         protected String name;

@@ -1,6 +1,7 @@
 package com.example.model.call.request;
 
 public class File extends Basic {
+    public static final String TYPE="file";
     protected String media;
     protected String file_name;
     protected long size;
@@ -12,11 +13,13 @@ public class File extends Basic {
         this.size = size;
     }
 
-    public String getMedia() {
+    @Override
+    public String getText() {
         return media;
     }
 
-    public void setMedia(String media) {
+    @Override
+    public void setText(String media) {
         this.media = media;
     }
 

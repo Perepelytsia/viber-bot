@@ -101,10 +101,10 @@ public class EventController {
                             this.answer = new Text(message.getSender().getId(), Text.TYPE, "Задание еще не полностью готово");
                         }
                     } else {
-                        this.answer = new Text(receiver, Text.TYPE, "API ответ");
+                        this.answer = new Text(message.getSender().getId(), Text.TYPE, "API ответ");
                     }
                     // save an answer
-                    this.repo.save(new Msg(this.answer.getSender().getName(), this.answer.getText()));
+                    this.repo.save(new Msg(Basic.NAME_BOT, this.answer.getText()));
                     // send an answer
                     clientMessage.createThread(this.gson.toJson(this.answer));
                     System.out.println("End "+jsonNode.get("event").asText());

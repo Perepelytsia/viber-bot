@@ -34,7 +34,7 @@ import com.example.repository.QuestionRepository;
 @RestController
 public class EventController {
     
-    @Value("${domain}")
+    @Value("${home.domain}")
     protected String domain;
     
     @Autowired
@@ -85,7 +85,7 @@ public class EventController {
                      // save an answer
                      this.repoAnswer.save(new Answer(subscribe.getUser().getId(), this.answer.getText()));
                      // send an answer
-                     this.clientMessage.createThread(this.gson.toJson(this.answer));
+                     this.clientMessage.send2Viber(this.gson.toJson(this.answer));
                      System.out.println("End "+jsonNode.get("event").asText());
                     break;
                 case "unsubscribed":
@@ -101,17 +101,23 @@ public class EventController {
                         String task = message.getMessage().getText().substring(matcher.start(), matcher.end());
                         Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/static/" + task);
                         if(Files.exists(path)) {
+                            // file with a task
                             this.answer = new File(message.getSender().getId(), File.TYPE, this.domain + task, task, Files.size(path));
                         } else {
+                            // the task is not  ready
                             this.answer = new Text(message.getSender().getId(), Text.TYPE, "Задание еще не полностью готово");
                         }
                     } else {
-                        this.answer = new Text(message.getSender().getId(), Text.TYPE, "API ответ");
+                        // a bot answer
+                        String answerJson = this.clientMessage.send2Botlibre(message.getMessage().getText());
+                        System.out.println(answerJson);
+                        com.example.model.bot.Answer answerObj = this.gson.fromJson(answerJson, com.example.model.bot.Answer.class);
+                        this.answer = new Text(message.getSender().getId(), Text.TYPE, answerObj.getMessage());
                     }
                     // save an answer
                     this.repoAnswer.save(new Answer(message.getSender().getId(), this.answer.getText()));
                     // send an answer
-                    clientMessage.createThread(this.gson.toJson(this.answer));
+                    this.clientMessage.send2Viber(this.gson.toJson(this.answer));
                     System.out.println("End "+jsonNode.get("event").asText());
                     break;
             }

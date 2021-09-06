@@ -9,30 +9,41 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
-public class Msg {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     protected String name;
     protected String data;
+    protected String token;
     protected Date day;
     protected Time at;
 
-    public Msg(String name, String data, Date day, Time at) {
+    public Question(String name, String token, String data, Date day, Time at) {
         this.name = name;
+        this.token = token;
         this.data = data;
         this.day = day;
         this.at = at;
     }
     
-    public Msg(String name, String data) {
+    public Question(String name, String token, String data) {
         this.name = name;
+        this.token = token;
         this.data = data;
         
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         
         this.day = new Date(timestamp.getTime());
         this.at = new Time(timestamp.getTime());
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Long getId() {

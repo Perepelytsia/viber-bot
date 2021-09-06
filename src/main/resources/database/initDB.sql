@@ -8,11 +8,21 @@
  * Created: Sep 5, 2021
  */
 
-CREATE TABLE IF NOT EXISTS msg
+CREATE TABLE IF NOT EXISTS question
 (
-    id    BIGSERIAL PRIMARY KEY ,
+    id    BIGSERIAL PRIMARY KEY,
     day DATE NOT NULL,
     at TIME NOT NULL,
-    name  VARCHAR(28) NOT NULL ,
+    name  VARCHAR(28) NOT NULL,
+    token  VARCHAR(100) NOT NULL,
+    data TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS answer
+(
+    id    BIGSERIAL PRIMARY KEY,
+    day DATE NOT NULL,
+    at TIME NOT NULL,
+    token  VARCHAR(100) NOT NULL,
     data TEXT NOT NULL
 );

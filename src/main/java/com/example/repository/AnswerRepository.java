@@ -6,11 +6,11 @@
 package com.example.repository;
 
 
-import com.example.model.postgre.Msg;
+import com.example.model.postgre.Answer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MsgRepository extends CrudRepository<Msg, Long> {
+public interface AnswerRepository extends CrudRepository<Answer, Long> {
     
 }

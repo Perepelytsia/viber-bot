@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.repository.MsgRepository;
 import com.example.model.call.request.Basic;
 import com.example.model.call.request.File;
 import com.example.model.call.request.Text;
@@ -27,7 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Date;
 import java.sql.Time;
-import com.example.model.postgre.Msg;
+import com.example.model.postgre.Question;
+import com.example.model.postgre.Answer;
+import com.example.repository.AnswerRepository;
+import com.example.repository.QuestionRepository;
 
 @RestController
 public class EventController {
@@ -39,7 +41,10 @@ public class EventController {
     protected HttpClient clientMessage;
             
     @Autowired
-    protected MsgRepository repo;
+    protected AnswerRepository repoAnswer;
+    
+    @Autowired
+    protected QuestionRepository repoQuestion;
 
     @Autowired
     protected Gson gson;
@@ -74,11 +79,11 @@ public class EventController {
                      // parse a question
                      Subscribe subscribe = this.gson.fromJson(decoded, Subscribe.class);
                      // save a question
-                     this.repo.save(new Msg(subscribe.getUser().getName(), jsonNode.get("event").asText(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
+                     this.repoQuestion.save(new Question(subscribe.getUser().getName(), subscribe.getUser().getId(), jsonNode.get("event").asText(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
                      // create an answer
                      this.answer = new Text(subscribe.getUser().getId(), Text.TYPE, "Привет. Для получение задание нужно написать в сообщении имя задания. Например test34.py.");
                      // save an answer
-                     this.repo.save(new Msg(this.answer.getSender().getName(), this.answer.getText()));
+                     this.repoAnswer.save(new Answer(subscribe.getUser().getId(), this.answer.getText()));
                      // send an answer
                      this.clientMessage.createThread(this.gson.toJson(this.answer));
                      System.out.println("End "+jsonNode.get("event").asText());
@@ -89,7 +94,7 @@ public class EventController {
                     // parse a question
                     Event message = this.gson.fromJson(decoded, Event.class);
                     // save a question
-                    this.repo.save(new Msg(message.getSender().getName(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
+                    this.repoQuestion.save(new Question(message.getSender().getName(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
                     // create an answer                
                     Matcher matcher = Pattern.compile("test[0-9]+.py").matcher(message.getMessage().getText());
                     if (matcher.find()) {
@@ -104,7 +109,7 @@ public class EventController {
                         this.answer = new Text(message.getSender().getId(), Text.TYPE, "API ответ");
                     }
                     // save an answer
-                    this.repo.save(new Msg(Basic.NAME_BOT, this.answer.getText()));
+                    this.repoAnswer.save(new Answer(message.getSender().getId(), this.answer.getText()));
                     // send an answer
                     clientMessage.createThread(this.gson.toJson(this.answer));
                     System.out.println("End "+jsonNode.get("event").asText());

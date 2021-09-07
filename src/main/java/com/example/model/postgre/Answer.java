@@ -13,20 +13,23 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected String token;
+    protected String uid;
     protected String data;
     protected Date day;
     protected Time at;
+    
+    public Answer() {  
+    }
 
-    public Answer(String token, String data, Date day, Time at) {
-        this.token = token;
+    public Answer(String uid, String data, Date day, Time at) {
+        this.uid = uid;
         this.data = data;
         this.day = day;
         this.at = at;
     }
     
-    public Answer(String token, String data) {
-        this.token = token;
+    public Answer(String uid, String data) {
+        this.uid = uid;
         this.data = data;
         
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -36,11 +39,11 @@ public class Answer {
     }
     
     public String getToken() {
-        return token;
+        return uid;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setToken(String uid) {
+        this.uid = uid;
     }
 
     public Long getId() {

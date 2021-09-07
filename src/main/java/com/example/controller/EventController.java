@@ -30,6 +30,7 @@ import com.example.model.postgre.Question;
 import com.example.model.postgre.Answer;
 import com.example.repository.AnswerRepository;
 import com.example.repository.QuestionRepository;
+import java.util.List;
 
 @RestController
 public class EventController {
@@ -79,7 +80,7 @@ public class EventController {
                      // parse a question
                      Subscribe subscribe = this.gson.fromJson(decoded, Subscribe.class);
                      // save a question
-                     this.repoQuestion.save(new Question(subscribe.getUser().getName(), subscribe.getUser().getId(), jsonNode.get("event").asText(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
+                     this.repoQuestion.save(new Question(subscribe.getUser().getName(), subscribe.getMessage_token(), subscribe.getUser().getId(), jsonNode.get("event").asText(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
                      // create an answer
                      this.answer = new Text(subscribe.getUser().getId(), Text.TYPE, "Привет. Для получение задание нужно написать в сообщении имя задания. Например test34.py.");
                      // save an answer
@@ -87,38 +88,46 @@ public class EventController {
                      // send an answer
                      this.clientMessage.send2Viber(this.gson.toJson(this.answer));
                      System.out.println("End "+jsonNode.get("event").asText());
-                    break;
+                     break;
                 case "unsubscribed":
-                    break;
+                     break;
                 case "message":
                     // parse a question
                     Event message = this.gson.fromJson(decoded, Event.class);
-                    // save a question
-                    this.repoQuestion.save(new Question(message.getSender().getName(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
-                    // create an answer                
-                    Matcher matcher = Pattern.compile("test[0-9]+.py").matcher(message.getMessage().getText());
-                    if (matcher.find()) {
-                        String task = message.getMessage().getText().substring(matcher.start(), matcher.end());
-                        Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/static/" + task);
-                        if(Files.exists(path)) {
-                            // file with a task
-                            this.answer = new File(message.getSender().getId(), File.TYPE, this.domain + task, task, Files.size(path));
+                    // find message with the token
+                    List<Question> dublicateQuestins = this.repoQuestion.findByToken(message.getMessage_token());
+                    // check dublicate message    
+                    if (dublicateQuestins.isEmpty()) {
+                        // save a question
+                        this.repoQuestion.save(new Question(message.getSender().getName(), message.getMessage_token(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
+                        // create an answer                
+                        Matcher matcher = Pattern.compile("test[0-9]+.py", Pattern.CASE_INSENSITIVE).matcher(message.getMessage().getText());
+                        if (matcher.find()) {
+                            String task = message.getMessage().getText().substring(matcher.start(), matcher.end());
+                            Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/static/" + task);
+                            if(Files.exists(path)) {
+                                // file with a task
+                                this.answer = new File(message.getSender().getId(), File.TYPE, this.domain + task, task, Files.size(path));
+                            } else {
+                                // the task is not  ready
+                                this.answer = new Text(message.getSender().getId(), Text.TYPE, "Задание еще не полностью готово");
+                            }
                         } else {
-                            // the task is not  ready
-                            this.answer = new Text(message.getSender().getId(), Text.TYPE, "Задание еще не полностью готово");
+                            // a bot answer
+                            String answerJson = this.clientMessage.send2Botlibre(message.getMessage().getText());
+                            System.out.println(answerJson);
+                            com.example.model.bot.Answer answerObj = this.gson.fromJson(answerJson, com.example.model.bot.Answer.class);
+                            this.answer = new Text(message.getSender().getId(), Text.TYPE, answerObj.getMessage());
                         }
+                        // save an answer
+                        this.repoAnswer.save(new Answer(message.getSender().getId(), this.answer.getText()));
+                        // send an answer
+                        this.clientMessage.send2Viber(this.gson.toJson(this.answer));
+                        System.out.println("End "+jsonNode.get("event").asText());
                     } else {
-                        // a bot answer
-                        String answerJson = this.clientMessage.send2Botlibre(message.getMessage().getText());
-                        System.out.println(answerJson);
-                        com.example.model.bot.Answer answerObj = this.gson.fromJson(answerJson, com.example.model.bot.Answer.class);
-                        this.answer = new Text(message.getSender().getId(), Text.TYPE, answerObj.getMessage());
+                        System.out.println("Dublicate message" + message.getMessage());
                     }
-                    // save an answer
-                    this.repoAnswer.save(new Answer(message.getSender().getId(), this.answer.getText()));
-                    // send an answer
-                    this.clientMessage.send2Viber(this.gson.toJson(this.answer));
-                    System.out.println("End "+jsonNode.get("event").asText());
+                    
                     break;
             }
             return this.gson.toJson(new Default());

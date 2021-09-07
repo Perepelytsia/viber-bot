@@ -15,21 +15,27 @@ public class Question {
     protected Long id;
     protected String name;
     protected String data;
-    protected String token;
+    protected String uid;
+    protected Long token;
     protected Date day;
     protected Time at;
+    
+    public Question() {  
+    }
 
-    public Question(String name, String token, String data, Date day, Time at) {
+    public Question(String name, Long token, String uid, String data, Date day, Time at) {
         this.name = name;
         this.token = token;
+        this.uid = uid;
         this.data = data;
         this.day = day;
         this.at = at;
     }
     
-    public Question(String name, String token, String data) {
+    public Question(String name, Long token, String uid, String data) {
         this.name = name;
         this.token = token;
+        this.uid = uid;
         this.data = data;
         
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -38,12 +44,20 @@ public class Question {
         this.at = new Time(timestamp.getTime());
     }
 
-    public String getToken() {
+    public Long getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(long token) {
         this.token = token;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Long getId() {

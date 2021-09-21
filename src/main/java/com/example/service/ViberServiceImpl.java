@@ -94,7 +94,7 @@ public class ViberServiceImpl implements ViberService {
             Matcher matcher = Pattern.compile("test[0-9]+.py").matcher(message.getMessage().getText());
             if (matcher.find()) {
                 String task = message.getMessage().getText().substring(matcher.start(), matcher.end());
-                Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/static/" + task);
+                Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/public/" + task);
                 if(Files.exists(path)) {
                     // file with a task
                     answer = new FileMessageModel(message.getSender().getId(), FileMessageModel.TYPE, this.domain + task, task, Files.size(path));

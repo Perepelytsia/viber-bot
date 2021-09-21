@@ -1,6 +1,6 @@
-package com.example.model.bot;
+package com.example.model.botlibre;
 
-public class Answer {
+public class AnswerModel {
     protected Long conversation;
     protected String emote;
     protected String avatar;
@@ -10,7 +10,7 @@ public class Answer {
     protected String avatarBackground;
     protected String message;
 
-    public Answer(Long conversation, String emote, String avatar, String avatarType, String avatarTalk, String avatarTalkType, String avatarBackground, String message) {
+    public AnswerModel(Long conversation, String emote, String avatar, String avatarType, String avatarTalk, String avatarTalkType, String avatarBackground, String message) {
         this.conversation = conversation;
         this.emote = emote;
         this.avatar = avatar;

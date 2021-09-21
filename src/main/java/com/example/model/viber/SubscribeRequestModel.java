@@ -1,13 +1,13 @@
-package com.example.model.callback.request;
+package com.example.model.viber;
 
-public class Subscribe {
+public class SubscribeRequestModel {
     protected String event;
     protected Long timestamp;
     protected String chat_hostname;
     protected Long message_token;
     protected User user;
 
-    public Subscribe(String event, Long timestamp, String chat_hostname, Long message_token, User user) {
+    public SubscribeRequestModel(String event, Long timestamp, String chat_hostname, Long message_token, User user) {
         this.event = event;
         this.timestamp = timestamp;
         this.chat_hostname = chat_hostname;

@@ -1,6 +1,6 @@
-package com.example.model.callback.request;
+package com.example.model.viber;
 
-public class Event {
+public class EventRequestModel {
     private String event;
     private Long timestamp;
     private String chat_hostname;
@@ -70,7 +70,7 @@ public class Event {
         this.message = message;
     }
 
-    public Event(String event, Long timestamp, String chat_hostname, Long message_token, boolean silent, Sender sender, Message message) {
+    public EventRequestModel(String event, Long timestamp, String chat_hostname, Long message_token, boolean silent, Sender sender, Message message) {
         this.event = event;
         this.timestamp = timestamp;
         this.chat_hostname = chat_hostname;

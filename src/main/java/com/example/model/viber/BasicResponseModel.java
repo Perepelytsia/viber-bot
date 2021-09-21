@@ -1,6 +1,6 @@
-package com.example.model.callback.response;
+package com.example.model.viber;
 
-public abstract class Basic {
+public abstract class BasicResponseModel {
     
     protected String status_message;
     protected Integer status;

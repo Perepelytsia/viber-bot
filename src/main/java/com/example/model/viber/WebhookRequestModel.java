@@ -1,6 +1,6 @@
-package com.example.model.callback.request;
+package com.example.model.viber;
 
-public class Webhook {
+public class WebhookRequestModel {
     private String event;
     private Integer timestamp;
     private String status_message;
@@ -38,7 +38,7 @@ public class Webhook {
         this.status = status;
     }
 
-    public Webhook(String event, Integer timestamp, String status_message, Integer status) {
+    public WebhookRequestModel(String event, Integer timestamp, String status_message, Integer status) {
         this.event = event;
         this.timestamp = timestamp;
         this.status_message = status_message;

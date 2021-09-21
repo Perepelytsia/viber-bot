@@ -11,11 +11,11 @@ import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.example.model.bot.Question;
+import com.example.model.botlibre.QuestionModel;
 import org.apache.http.util.EntityUtils;
 
 @Service
-public class HttpClient {
+public class HttpClientServiceImpl implements HttpClientService {
     
     @Autowired
     protected Gson gson;
@@ -37,6 +37,7 @@ public class HttpClient {
     
     protected String botAnswer;
     
+    @Override
     public void send2Viber(String answer) {
         Thread thread = new Thread(() -> {
             try {
@@ -62,6 +63,7 @@ public class HttpClient {
         thread.start();
     }
     
+    @Override
     public String send2Botlibre(String question) {
         try {
             Thread thread = new Thread(() -> {
@@ -70,7 +72,7 @@ public class HttpClient {
                     CloseableHttpClient httpClient = HttpClients.createDefault();
                     System.out.println(this.url);
                     HttpPost post = new HttpPost(this.url);
-                    StringEntity entity = new StringEntity(this.gson.toJson(new Question(this.app, this.bot, question)), "UTF-8");
+                    StringEntity entity = new StringEntity(this.gson.toJson(new QuestionModel(this.app, this.bot, question)), "UTF-8");
                     post.setEntity(entity);
                     post.setHeader("Accept", "application/json");
                     post.setHeader("Content-type", "application/json");

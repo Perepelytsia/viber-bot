@@ -1,6 +1,6 @@
-package com.example.model.call.request;
+package com.example.model.viber;
 
-public abstract class Basic {
+public abstract class BasicMessageModel {
     public static final String NAME_BOT = "Lego Helper";
     protected String receiver;
     protected Integer min_api_version;
@@ -8,7 +8,7 @@ public abstract class Basic {
     protected String tracking_data;
     protected String type;
 
-    public Basic(String receiver, String type) {
+    public BasicMessageModel(String receiver, String type) {
         this.receiver = receiver;
         this.min_api_version = 2;
         this.sender = new Sender("Alex Perepelytsia", "https://media-direct.cdn.viber.com/download_photo?dlid=k9lPCdXcJ_2WK9hNEkPifKVFaC2MnIohSqvlsmcutq_UKO2xyYoj5qsm1SSZIC4WBCj2iEJXjuMd9oU4t1GyFhvPwXEkDrsHOE6AAFQEFlKNFa_crUHqP1pllxyey9RqCPShnA&fltp=jpg&imsz=0000");

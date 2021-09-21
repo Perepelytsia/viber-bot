@@ -1,11 +1,11 @@
-package com.example.model.bot;
+package com.example.model.botlibre;
 
-public class Question {
+public class QuestionModel {
     protected Long application;
     protected int instance;
     protected String message;
 
-    public Question(Long application, int instance, String message) {
+    public QuestionModel(Long application, int instance, String message) {
         this.application = application;
         this.instance = instance;
         this.message = message;

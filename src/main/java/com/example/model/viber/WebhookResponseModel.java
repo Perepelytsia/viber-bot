@@ -1,6 +1,6 @@
-package com.example.model.callback.response;
+package com.example.model.viber;
 
-public class Webhook extends Basic {
+public class WebhookResponseModel extends BasicResponseModel {
     
     protected String[] event_types;
 
@@ -12,7 +12,7 @@ public class Webhook extends Basic {
         return event_types;
     }
 
-    public Webhook() {
+    public WebhookResponseModel() {
         this.status_message = "ok";
         this.status = 0;
         String[] event_types = {"message", "delivered", "seen", "failed", "subscribed", "unsubscribed", "conversation_started"};

@@ -1,12 +1,12 @@
-package com.example.model.call.request;
+package com.example.model.viber;
 
-public class File extends Basic {
+public class FileMessageModel extends BasicMessageModel {
     public static final String TYPE="file";
     protected String media;
     protected String file_name;
     protected long size;
 
-    public File(String receiver, String type, String media, String file_name, long size) {
+    public FileMessageModel(String receiver, String type, String media, String file_name, long size) {
         super(receiver, type);
         this.media = media;
         this.file_name = file_name;

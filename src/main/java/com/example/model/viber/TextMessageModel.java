@@ -1,10 +1,10 @@
-package com.example.model.call.request;
+package com.example.model.viber;
 
-public class Text extends Basic {
+public class TextMessageModel extends BasicMessageModel {
     public static final String TYPE="text";
     protected String text;
 
-    public Text(String receiver, String type, String text) {
+    public TextMessageModel(String receiver, String type, String text) {
         super(receiver, type);
         this.text = text;
     }

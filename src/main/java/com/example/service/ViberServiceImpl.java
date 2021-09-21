@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.model.postgre.AnswerModel;
-import com.example.model.postgre.QuestionModel;
+import com.example.model.postgre.Answer;
+import com.example.model.postgre.Question;
 import com.example.model.viber.BasicMessageModel;
 import com.example.model.viber.DefaultResponseModel;
 import com.example.model.viber.ErrorResponseModel;
@@ -71,11 +71,11 @@ public class ViberServiceImpl implements ViberService {
     @Override
     public String getSubscribeResponse(SubscribeRequestModel subscribe) {
         // save a question
-        this.repoQuestion.save(new QuestionModel(subscribe.getUser().getName(), subscribe.getMessage_token(), subscribe.getUser().getId(), subscribe.getEvent(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
+        this.repoQuestion.save(new Question(subscribe.getUser().getName(), subscribe.getMessage_token(), subscribe.getUser().getId(), subscribe.getEvent(), new Date(subscribe.getTimestamp()), new Time(subscribe.getTimestamp())));
         // create an answer
         BasicMessageModel answer = new TextMessageModel(subscribe.getUser().getId(), TextMessageModel.TYPE, "Привет. Для получение задание нужно написать в сообщении имя задания. Например test34.py.");
         // save an answer
-        this.repoAnswer.save(new AnswerModel(subscribe.getUser().getId(), answer.getText()));
+        this.repoAnswer.save(new Answer(subscribe.getUser().getId(), answer.getText()));
         // return json answer
         return this.gson.toJson(answer);
     }
@@ -84,11 +84,11 @@ public class ViberServiceImpl implements ViberService {
     public String getEventResponse(EventRequestModel message) throws IOException {
         BasicMessageModel answer = null;
         // find message with the token
-        List<QuestionModel> dublicateQuestins = this.repoQuestion.findByToken(message.getMessage_token());
+        List<Question> dublicateQuestins = this.repoQuestion.findByToken(message.getMessage_token());
         // check dublicate message    
         if (dublicateQuestins.isEmpty()) {
             // save a question
-            this.repoQuestion.save(new QuestionModel(message.getSender().getName(), message.getMessage_token(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
+            this.repoQuestion.save(new Question(message.getSender().getName(), message.getMessage_token(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
             // create an answer
             message.getMessage().setText(message.getMessage().getText().toLowerCase());
             Matcher matcher = Pattern.compile("test[0-9]+.py").matcher(message.getMessage().getText());
@@ -107,7 +107,7 @@ public class ViberServiceImpl implements ViberService {
                 answer = this.botlibreManager.getResponse(message.getSender().getId(), message.getMessage().getText());
             }
             // save an answer
-            this.repoAnswer.save(new AnswerModel(message.getSender().getId(), answer.getText()));
+            this.repoAnswer.save(new Answer(message.getSender().getId(), answer.getText()));
             
             System.out.println("End "+answer.getText());
         } else {

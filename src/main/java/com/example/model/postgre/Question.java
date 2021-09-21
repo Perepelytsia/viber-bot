@@ -9,26 +9,32 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
-public class AnswerModel {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected String uid;
+    protected String name;
     protected String data;
+    protected String uid;
+    protected Long token;
     protected Date day;
     protected Time at;
     
-    public AnswerModel() {  
+    public Question() {  
     }
 
-    public AnswerModel(String uid, String data, Date day, Time at) {
+    public Question(String name, Long token, String uid, String data, Date day, Time at) {
+        this.name = name;
+        this.token = token;
         this.uid = uid;
         this.data = data;
         this.day = day;
         this.at = at;
     }
     
-    public AnswerModel(String uid, String data) {
+    public Question(String name, Long token, String uid, String data) {
+        this.name = name;
+        this.token = token;
         this.uid = uid;
         this.data = data;
         
@@ -37,12 +43,20 @@ public class AnswerModel {
         this.day = new Date(timestamp.getTime());
         this.at = new Time(timestamp.getTime());
     }
-    
-    public String getToken() {
+
+    public Long getToken() {
+        return token;
+    }
+
+    public void setToken(long token) {
+        this.token = token;
+    }
+
+    public String getUid() {
         return uid;
     }
 
-    public void setToken(String uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -52,6 +66,14 @@ public class AnswerModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getData() {

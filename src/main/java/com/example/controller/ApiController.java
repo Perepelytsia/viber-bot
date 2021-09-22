@@ -1,20 +1,26 @@
 package com.example.controller;
 
-import com.example.model.viber.DefaultResponseModel;
-import com.google.gson.Gson;
+import com.example.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
+@CrossOrigin
 public class ApiController {
     
     @Autowired
-    protected Gson gson;
+    protected ChatService chatService;
     
-    @GetMapping("/api")
-    public String getApi(Model model) {
-        return this.gson.toJson(new DefaultResponseModel());
+    @GetMapping("/api/users")
+    public String getUsers() {
+        return this.chatService.getUsers();
+    }
+    
+    @GetMapping("/api/chat")
+    public String getChat(@RequestParam String uid) {
+        return this.chatService.getChat(uid);
     }
 }

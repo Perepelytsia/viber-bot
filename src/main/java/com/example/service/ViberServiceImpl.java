@@ -91,7 +91,7 @@ public class ViberServiceImpl implements ViberService {
             this.repoQuestion.save(new Question(message.getSender().getName(), message.getMessage_token(), message.getSender().getId(), message.getMessage().getText(), new Date(message.getTimestamp()), new Time(message.getTimestamp())));
             // create an answer
             message.getMessage().setText(message.getMessage().getText().toLowerCase());
-            Matcher matcher = Pattern.compile("test[0-9]+.py").matcher(message.getMessage().getText());
+            Matcher matcher = Pattern.compile("test[0-9]+.txt").matcher(message.getMessage().getText());
             if (matcher.find()) {
                 String task = message.getMessage().getText().substring(matcher.start(), matcher.end());
                 Path path = Paths.get(new java.io.File(".").getCanonicalPath() + "/src/main/resources/public/" + task);

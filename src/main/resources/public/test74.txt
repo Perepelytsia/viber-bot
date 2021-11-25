@@ -1,5 +1,2 @@
-https://programmera.ru/uroki-po-python/web-scraping-v-python/
-https://coderlessons.com/tutorials/python-technologies/izuchite-python-web-scraping/python-web-scraping-kratkoe-rukovodstvo
-https://techrocks.ru/2018/03/22/web-scraping-python-tutorial/
-https://habr.com/ru/post/280238/
-http://maxima-library.org/component/maxlib/b/464803
+сохранить инфу по гривне из https://exchangeratesapi.io/ в csv формате
+Использовать виртуальное окружение и установить нужные библиотеки(модули) туда не глобально.

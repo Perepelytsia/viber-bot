@@ -1,0 +1,5 @@
+Сделать Web Scraping с помощью python 
+сайта https://en.wikipedia.org/wiki/Gay-friendly - информацию с табл. "List of countries by their Gay Travel Index (2021)"
+Использовать виртуальное окружение и установить нужные библиотеки(модули) туда не глобально.
+Использовать ООП подход
+Собранную информацию сохранить в файле в csv и json формате

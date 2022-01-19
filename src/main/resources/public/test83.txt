@@ -1,0 +1,4 @@
+https://pythonru.com/biblioteki/vvedenie-v-postgresql-s-python-psycopg2
+https://www.youtube.com/watch?v=UZ7vCwbnn2c&ab_channel=PythonToday
+https://www.youtube.com/watch?v=WeUPA1EQwtw&ab_channel=MihailKozlov
+https://coderlessons.com/tutorials/bazy-dannykh/vyuchit-postgresql/postgresql-interfeis-python

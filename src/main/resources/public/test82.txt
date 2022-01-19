@@ -1,0 +1,3 @@
+https://www.w3schools.com/sql/sql_exercises.asp (Start SQL Exercises)
+https://www.sql-ex.ru/ (зарегестрироваться и начать проходить задания, много и вдумчиво)
+тут нужно потратить время и почувствовать себя уверенным
